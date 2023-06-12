@@ -7,9 +7,12 @@
         <common-aside-template/>
     </el-aside>
     <el-container>
-        <el-header>Header</el-header>
+        <el-header>
+            <common-header/>
+        </el-header>
         <el-main>
-
+            <!-- 路由出口 -->
+            <!-- 路由匹配的组件渲染在这里 -->
             <router-view></router-view>
         </el-main>
     </el-container>
@@ -19,10 +22,22 @@
 
 <script>
 import CommonAsideTemplate from '../components/CommonAsideTemplate.vue'
+import CommonHeader from '@/components/CommonHeader.vue';
     export default {
         data() {
             return {}
         },
-        components: {CommonAsideTemplate}
+        components: {
+            CommonAsideTemplate,
+            CommonHeader
+        
+        }
     }
 </script>
+
+
+<style scoped>
+.el-header {
+    padding:  0;
+}
+</style>

@@ -50,7 +50,6 @@
 export default {
     data() {
         return {
-            isCollapse: false,
             menuData: [
                 {
                     path: "/",
@@ -104,9 +103,15 @@ export default {
         handleClose(key, keyPath) {
             console.log(key, keyPath);
         },
+        // 点击菜单
         clickmenu(item){
             console.log(item)
-            this.$router.push(item.path)
+            //$route  当前页面具体路由
+            //$router 表示整个实例
+            //当页面的路由与跳转的路由不一致才允许跳转
+            if(this.$route.path != item.path && !(this.$route.path === '/home' && (item.path === '/'))) {
+                this.$router.push(item.path)
+            }
         }
     },
 
@@ -119,6 +124,9 @@ export default {
 
         hasChildren() {
             return this.menuData.filter(item => item.children)
+        },
+        isCollapse() {
+            return this.$store.state.tab.isCollapse
         }
     }
 }
