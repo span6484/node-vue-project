@@ -3,7 +3,7 @@
 
     <el-container>
         <!-- 引入代码 https://element.eleme.io/#/zh-CN/component/container -->
-    <el-aside width="200px">
+    <el-aside width="auto">
         <common-aside-template/>
     </el-aside>
     <el-container>

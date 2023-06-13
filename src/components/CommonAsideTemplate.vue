@@ -3,8 +3,10 @@
 
         <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"                
             :collapse="isCollapse" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
-            <h3>通用后台管理系统</h3>
-                    <!-- 增加了clickmenu clickmeu  实现点击菜单功能 -->
+
+            <!-- 收起显示后台， 全放开显示通用后台管理系统 -->
+            <h3>{{isCollapse ? "后台" : "通用后台管理系统"}}</h3>
+                    <!-- 增加了clickmenu clickmeu  实现点击菜单功能 --> 
             <el-menu-item @click="clickmenu(item)" v-for="item in noChildren" :key="item.name" :index="item.name">
 
                 <!--        根据 element里面 el-icon-home. 进行动态命名 -->
@@ -131,3 +133,9 @@ export default {
     }
 }
 </script>
+
+<style>
+.el-menu {
+    border-right: none;
+}
+</style>
