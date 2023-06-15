@@ -46,6 +46,14 @@
                         </div>
                     </el-card>
                 </div>
+
+                <el-card style="height: 280px;">
+                    <div ref="echarts1"></div>
+                </el-card>
+                <div class="graph">
+                        <el-card style="height:260px"></el-card>
+                        <el-card style="height:260px"></el-card>
+                    </div>
             </el-col>
         </el-row>
     </div>
@@ -53,30 +61,86 @@
 
 <script>
 import {getData} from "../api"
+import * as echarts from 'echarts'
 export default {
     data() {
         return {
-            tableData: [{
-                name: 'oppo',
-                todayBuy: 100,
-                monthBuy: 300,
-                totalBuy: 800
-            }, {
-                name: 'vivo',
-                todayBuy: 100,
-                monthBuy: 300,
-                totalBuy: 800
-            }, {
-                name: 'iphone',
-                todayBuy: 100,
-                monthBuy: 300,
-                totalBuy: 800
-            }, {
-                name: 'Huawei',
-                todayBuy: 100,
-                monthBuy: 300,
-                totalBuy: 800
-            }],
+            tableData: [
+          {
+            name: 'oppo',
+            todayBuy: 100,
+            monthBuy: 300,
+            totalBuy: 800
+          },
+          {
+            name: 'vivo',
+            todayBuy: 100,
+            monthBuy: 300,
+            totalBuy: 800
+          },
+          {
+            name: '苹果',
+            todayBuy: 100,
+            monthBuy: 300,
+            totalBuy: 800
+          },
+          {
+            name: '小米',
+            todayBuy: 100,
+            monthBuy: 300,
+            totalBuy: 800
+          },
+          {
+            name: '三星',
+            todayBuy: 100,
+            monthBuy: 300,
+            totalBuy: 800
+          },
+          {
+            name: '魅族',
+           todayBuy: 100,
+            monthBuy: 300,
+            totalBuy: 800
+          }
+        ],
+countData: [
+        {
+          name: "今日支付订单",
+          value: 1234,
+          icon: "success",
+          color: "#2ec7c9",
+        },
+        {
+          name: "今日收藏订单",
+          value: 210,
+          icon: "star-on",
+          color: "#ffb980",
+        },
+        {
+          name: "今日未支付订单",
+          value: 1234,
+          icon: "s-goods",
+          color: "#5ab1ef",
+        },
+        {
+          name: "本月支付订单",
+          value: 1234,
+          icon: "success",
+          color: "#2ec7c9",
+        },
+        {
+          name: "本月收藏订单",
+          value: 210,
+          icon: "star-on",
+          color: "#ffb980",
+        },
+        {
+          name: "本月未支付订单",
+          value: 1234,
+          icon: "s-goods",
+          color: "#5ab1ef",
+        },
+      ],
 
             tableLabel: {
                 name: '课程',
@@ -84,53 +148,18 @@ export default {
                 monthBuy: '本月购买',
                 totalBuy: '总购买数',
 
-            },
-
-
-            countData: [
-                {
-                    name: "今日未支付订单",
-                    value: 1234,
-                    icon: "s-goods",
-                    color: "#5ab1ef"
-                },
-                {
-                    name: "今日支付订单",
-                    value: 1234,
-                    icon: "success",
-                    color: "#2ec7c9"
-                },
-                {
-                    name: "今日收藏订单",
-                    value: 1234,
-                    icon: "star-on",
-                    color: "#ffb980"
-                },
-                {
-                    name: "本月支付订单",
-                    value: 1234,
-                    icon: "success",
-                    color: "#2ec7c9"
-                },
-                {
-                    name: "本月收藏订单",
-                    value: 210,
-                    icon: "star-on",
-                    color: "#ffb980"
-                },
-                {
-                    name: "本月未支付订单",
-                    value: 1234,
-                    icon: "s-goods",
-                    color: "#2ec7c9"
-                }
-            ]
+            }
         }
     },
     mounted() {
+        //获取data
         getData().then((data) => {
+            console.log('hello')
             console.log(data)
         })
+
+        //基于准备好的dom, 初始化echarts实例
+        const echarts1 = echarts.init(this.$refs.echarts1);
     }
 }
 </script>
@@ -212,8 +241,19 @@ export default {
         }
     }
     .el-card {
-        width: 32%;
+        width: 32%; 
         margin-bottom: 20px;
+    }
+
+
+}
+
+.graph {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    .el-card {
+        width: 48%;
     }
 }
 </style>
