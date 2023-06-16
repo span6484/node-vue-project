@@ -154,12 +154,21 @@ countData: [
     mounted() {
         //获取data
         getData().then((data) => {
+            const {tableData} = data.data
             console.log('hello')
-            console.log(data)
-        })
+            console.log(data.data)
+            this.tableData = tableData
+            //基于准备好的dom, 初始化echarts实例
+            const echarts1 = echarts.init(this.$refs.echarts1);
+            var option = {}
 
-        //基于准备好的dom, 初始化echarts实例
-        const echarts1 = echarts.init(this.$refs.echarts1);
+            //处理数据xAxis
+            const orderData = data.data
+
+            console.log(orderData.data)
+            // const xAxis = Object.keys(orderData.data)
+            // console.log(xAxis)
+        })
     }
 }
 </script>
