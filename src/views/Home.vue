@@ -48,10 +48,15 @@
                 </div>
 
                 <el-card style="height: 280px;">
-                    <div ref="echarts1"></div>
+                    <!-- 折线图 --> 
+                    <!-- 设置dom的宽跟高 -->
+                    <div ref="echarts1" style="height: 280px"></div>
                 </el-card>
                 <div class="graph">
-                        <el-card style="height:260px"></el-card>
+                        <!-- 左边柱状图 -->
+                        <el-card style="height:260px">
+                            <div ref="echarts2" style="height: 260px"></div>
+                        </el-card>
                         <el-card style="height:260px"></el-card>
                     </div>
             </el-col>
@@ -65,115 +70,88 @@ import * as echarts from 'echarts'
 export default {
     data() {
         return {
-            tableData: [
-          {
-            name: 'oppo',
-            todayBuy: 100,
-            monthBuy: 300,
-            totalBuy: 800
-          },
-          {
-            name: 'vivo',
-            todayBuy: 100,
-            monthBuy: 300,
-            totalBuy: 800
-          },
-          {
-            name: '苹果',
-            todayBuy: 100,
-            monthBuy: 300,
-            totalBuy: 800
-          },
-          {
-            name: '小米',
-            todayBuy: 100,
-            monthBuy: 300,
-            totalBuy: 800
-          },
-          {
-            name: '三星',
-            todayBuy: 100,
-            monthBuy: 300,
-            totalBuy: 800
-          },
-          {
-            name: '魅族',
-           todayBuy: 100,
-            monthBuy: 300,
-            totalBuy: 800
-          }
-        ],
-countData: [
-        {
-          name: "今日支付订单",
-          value: 1234,
-          icon: "success",
-          color: "#2ec7c9",
-        },
-        {
-          name: "今日收藏订单",
-          value: 210,
-          icon: "star-on",
-          color: "#ffb980",
-        },
-        {
-          name: "今日未支付订单",
-          value: 1234,
-          icon: "s-goods",
-          color: "#5ab1ef",
-        },
-        {
-          name: "本月支付订单",
-          value: 1234,
-          icon: "success",
-          color: "#2ec7c9",
-        },
-        {
-          name: "本月收藏订单",
-          value: 210,
-          icon: "star-on",
-          color: "#ffb980",
-        },
-        {
-          name: "本月未支付订单",
-          value: 1234,
-          icon: "s-goods",
-          color: "#5ab1ef",
-        },
-      ],
-
+            tableData: [],
             tableLabel: {
                 name: '课程',
                 todayBuy: '今日购买',
                 monthBuy: '本月购买',
-                totalBuy: '总购买数',
-
-            }
+                totalBuy: '总购买'
+            },
+            countData: [
+                {
+                name: "今日支付订单",
+                value: 1234,
+                icon: "success",
+                color: "#2ec7c9",
+                },
+                {
+                name: "今日收藏订单",
+                value: 210,
+                icon: "star-on",
+                color: "#ffb980",
+                },
+                {
+                name: "今日未支付订单",
+                value: 1234,
+                icon: "s-goods",
+                color: "#5ab1ef",
+                },
+                {
+                name: "本月支付订单",
+                value: 1234,
+                icon: "success",
+                color: "#2ec7c9",
+                },
+                {
+                name: "本月收藏订单",
+                value: 210,
+                icon: "star-on",
+                color: "#ffb980",
+                },
+                {
+                name: "本月未支付订单",
+                value: 1234,
+                icon: "s-goods",
+                color: "#5ab1ef",
+                },
+            ]
         }
     },
     mounted() {
         //获取data
-        getData().then((data) => {
+        getData().then(({data}) => {
             const {tableData} = data.data
-            console.log('hello')
-            console.log(data.data)
+            console.log(tableData)
             this.tableData = tableData
+            const { orderData } = data.data
             //基于准备好的dom, 初始化echarts实例
             const echarts1 = echarts.init(this.$refs.echarts1);
-            var option = {}
+            var echarts1Option = {}
 
             //处理数据xAxis
-            const orderData = data.data
-
-            console.log(orderData.data)
-            // const xAxis = Object.keys(orderData.data)
-            // console.log(xAxis)
+            const xAxis = Object.keys(orderData.data[0])
+            const xAxisData = {
+                data: xAxis
+            }
+            echarts1Option.xAxis = xAxisData
+            echarts1Option.yAxis = {}
+            echarts1Option.legend = xAxisData
+            echarts1Option.series = []
+            xAxis.forEach(key => {
+                echarts1Option.series.push({
+                    name: key,
+                    data: orderData.data.map(item => item[key]),
+                    type: 'line'
+                })
+            })
+            console.log(echarts1Option)
+            echarts1.setOption(echarts1Option);
         })
     }
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less" scoped> 
 .user {
     padding-bottom: 20px;
     margin-bottom: 20px;
