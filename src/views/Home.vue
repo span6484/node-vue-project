@@ -38,34 +38,36 @@
 
             <el-col :span="16">
                 <div class="num">
-                    <el-card v-for="item in countData" :key="item.name" :body-style="{display: 'flex', padding: 0}">
-                        <i class="icon" :class="`el-icon-${item.icon}`" :style="{background: item.color}"></i>
+                    <el-card v-for="item in countData" :key="item.name" :body-style="{ display: 'flex', padding: 0 }">
+                        <i class="icon" :class="`el-icon-${item.icon}`" :style="{ background: item.color }"></i>
                         <div class="detail">
-                            <p class="price">¥{{item.value}}</p>
-                            <p class="name ">{{item.name}}</p>
+                            <p class="price">¥{{ item.value }}</p>
+                            <p class="name ">{{ item.name }}</p>
                         </div>
                     </el-card>
                 </div>
 
                 <el-card style="height: 280px;">
-                    <!-- 折线图 --> 
+                    <!-- 折线图 -->
                     <!-- 设置dom的宽跟高 -->
                     <div ref="echarts1" style="height: 280px"></div>
                 </el-card>
                 <div class="graph">
-                        <!-- 左边柱状图 -->
-                        <el-card style="height:260px">
-                            <div ref="echarts2" style="height: 260px"></div>
-                        </el-card>
-                        <el-card style="height:260px"></el-card>
-                    </div>
+                    <!-- 左边柱状图 -->
+                    <el-card style="height:260px">
+                        <div ref="echarts2" style="height: 260px"></div>
+                    </el-card>
+                    <el-card style="height:260px">
+                        <div ref="echarts3" style="height: 260px"></div>
+                    </el-card>
+                </div>
             </el-col>
         </el-row>
     </div>
 </template>
 
 <script>
-import {getData} from "../api"
+import { getData } from "../api"
 import * as echarts from 'echarts'
 export default {
     data() {
@@ -79,51 +81,52 @@ export default {
             },
             countData: [
                 {
-                name: "今日支付订单",
-                value: 1234,
-                icon: "success",
-                color: "#2ec7c9",
+                    name: "今日支付订单",
+                    value: 1234,
+                    icon: "success",
+                    color: "#2ec7c9",
                 },
                 {
-                name: "今日收藏订单",
-                value: 210,
-                icon: "star-on",
-                color: "#ffb980",
+                    name: "今日收藏订单",
+                    value: 210,
+                    icon: "star-on",
+                    color: "#ffb980",
                 },
                 {
-                name: "今日未支付订单",
-                value: 1234,
-                icon: "s-goods",
-                color: "#5ab1ef",
+                    name: "今日未支付订单",
+                    value: 1234,
+                    icon: "s-goods",
+                    color: "#5ab1ef",
                 },
                 {
-                name: "本月支付订单",
-                value: 1234,
-                icon: "success",
-                color: "#2ec7c9",
+                    name: "本月支付订单",
+                    value: 1234,
+                    icon: "success",
+                    color: "#2ec7c9",
                 },
                 {
-                name: "本月收藏订单",
-                value: 210,
-                icon: "star-on",
-                color: "#ffb980",
+                    name: "本月收藏订单",
+                    value: 210,
+                    icon: "star-on",
+                    color: "#ffb980",
                 },
                 {
-                name: "本月未支付订单",
-                value: 1234,
-                icon: "s-goods",
-                color: "#5ab1ef",
+                    name: "本月未支付订单",
+                    value: 1234,
+                    icon: "s-goods",
+                    color: "#5ab1ef",
                 },
             ]
         }
     },
     mounted() {
         //获取data
-        getData().then(({data}) => {
-            const {tableData} = data.data
-            console.log(tableData)
+        getData().then(({ data }) => {
+            const { tableData, userData, videoData} = data.data
+            console.log(data)
             this.tableData = tableData
             const { orderData } = data.data
+            //折线图
             //基于准备好的dom, 初始化echarts实例
             const echarts1 = echarts.init(this.$refs.echarts1);
             var echarts1Option = {}
@@ -146,101 +149,154 @@ export default {
             })
             console.log(echarts1Option)
             echarts1.setOption(echarts1Option);
+
+            //     //右侧柱状图1
+            var echarts2Option = {}
+            const echarts2 = echarts.init(this.$refs.echarts2);
+            // const xAxis = Object.keys(orderData.data[0])
+            console.log(userData)
+            var echarts2Option = {
+                legend: {
+                },
+                grid: {
+                    left: "20%"
+                },
+                tooltip: {
+                    trigger: "axis"
+                },
+                xAxis: {
+                    data: userData.map(item => item.date)   // ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+                },
+                yAxis: {},
+                series: [
+                    {
+                        name: '新增用户',
+                        type: 'bar',
+                        data: userData.map(item => item.new)
+                    },
+                    {
+                        name: '活跃用户',
+                        type: 'bar',
+                        data: userData.map(item => item.active)
+                    }
+                ]
+            };
+            echarts2.setOption(echarts2Option);
+
+            const echarts3 = echarts.init(this.$refs.echarts3);
+            var echarts3Option = {}
+            echarts3Option = {
+                series: [
+                    {
+                        type: 'pie',
+                        data: videoData
+                    }
+                ]
+            };
+
+            echarts3.setOption(echarts3Option);
+
         })
+
+
+
     }
 }
 </script>
 
-<style lang="less" scoped> 
-.user {
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #ccc;
-    display: flex;
-    align-items: center;
+<style lang="less" scoped> .user {
+     padding-bottom: 20px;
+     margin-bottom: 20px;
+     border-bottom: 1px solid #ccc;
+     display: flex;
+     align-items: center;
 
-    img {
-        margin-right: 40px;
-        height: 150px;
-        width: 150px;
-        border-radius: 50%;
-    }
-}
+     img {
+         margin-right: 40px;
+         height: 150px;
+         width: 150px;
+         border-radius: 50%;
+     }
+ }
 
-.userinfo {
-    .name {
-        font-size: 32px;
-        margin-bottom: 10px
-    }
+ .userinfo {
+     .name {
+         font-size: 32px;
+         margin-bottom: 10px
+     }
 
-    .access {
-        color: #999;
-    }
-}
-
-
-.login_info {
-    p {
-        line-height: 28px;
-        font-size: 14px;
-        color: #999;
-
-        span {
-            color: #666;
-            margin-left: 20px;
-        }
-    }
+     .access {
+         color: #999;
+     }
+ }
 
 
-}
+ .login_info {
+     p {
+         line-height: 28px;
+         font-size: 14px;
+         color: #999;
 
-.num {
-    display: flex;
-    flex-wrap: wrap;
-    // /贴边属性
-    justify-content: space-between;
-    .icon {
-        width: 80px;
-        height: 80px;
-        font-size: 30px;
-        text-align: center;
-        line-height: 80px;
-        color: #fff;
-    }
-
-    .detail {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        margin-left: 15px;
-        .price {
-            font-size: 30px;
-            margin-bottom: 10px;
-            line-height: 30px;
-            height: 30px;
-
-        }
-
-        .name {
-            font-size: 14px;
-            text-align: center;
-            color: #9999
-        }
-    }
-    .el-card {
-        width: 32%; 
-        margin-bottom: 20px;
-    }
+         span {
+             color: #666;
+             margin-left: 20px;
+         }
+     }
 
 
-}
+ }
 
-.graph {
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
-    .el-card {
-        width: 48%;
-    }
-}
+ .num {
+     display: flex;
+     flex-wrap: wrap;
+     // /贴边属性
+     justify-content: space-between;
+
+     .icon {
+         width: 80px;
+         height: 80px;
+         font-size: 30px;
+         text-align: center;
+         line-height: 80px;
+         color: #fff;
+     }
+
+     .detail {
+         display: flex;
+         flex-direction: column;
+         justify-content: center;
+         margin-left: 15px;
+
+         .price {
+             font-size: 30px;
+             margin-bottom: 10px;
+             line-height: 30px;
+             height: 30px;
+
+         }
+
+         .name {
+             font-size: 14px;
+             text-align: center;
+             color: #9999
+         }
+     }
+
+     .el-card {
+         width: 32%;
+         margin-bottom: 20px;
+     }
+
+
+ }
+
+ .graph {
+     margin-top: 20px;
+     display: flex;
+     justify-content: space-between;
+
+     .el-card {
+         width: 48%;
+     }
+ }
 </style>
