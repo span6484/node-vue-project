@@ -2,10 +2,12 @@
 <template>
     <div class="header-container">
         <div class="l-content">
-            <el-button @click="handleMenu" icon="el-icon-menu" size="mini"></el-button>
+            <el-button style="margin-right: 20px" @click="handleMenu" icon="el-icon-menu" size="mini"></el-button>
             <!-- 面包屑 -->
-            <span class="text">首页</span>
-        </div>        
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item v-for="item in tags" :key="item.path" :to="{ path: item.path }">{{ item.label }}</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
 
         <div class="r-content">
             <el-dropdown>
@@ -18,21 +20,31 @@
                     <el-dropdown-item>退出</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-        </div>       
+        </div>
     </div>
 </template>
 
 <script>
-    export default {
-        data() {
-            return {}
-        },
-        methods: {
-            handleMenu() {
-                this.$store.commit('collapseMenu')        //这个$store 是因为之前在main.js 中已经挂在store在new Vue中 
-            }
+import { mapState } from 'vuex';
+
+export default {
+    data() {
+        return {}
+    },
+    methods: {
+        handleMenu() {
+            this.$store.commit('collapseMenu')        //这个$store 是因为之前在main.js 中已经挂在store在new Vue中 
         }
+    },
+    computed: {
+        ...mapState({
+            tags: state => state.tab.tabsList
+        })
+    },
+    mounted() {
+        console.log(this.tags, 'tags')
     }
+}
 </script>
 <style lang="less" scoped>
 .header-container {
@@ -56,5 +68,25 @@
             border-radius: 50%;
         }
     }
+
+    .l-content {
+
+        display: flex;
+        align-items: center;
+        /deep/.el-breadcrumb__item {
+            .el-breadcrumb__inner {
+                &.is-link {
+                        color: #666
+                }
+
+        }
+
+        &:last-child {
+            .el-breadcrumb__inner {
+            color: #fff
+            }
+        }
+    }
+}
 }
 </style>
